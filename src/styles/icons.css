@@ -1,0 +1,10 @@
+[data-lucide],
+.lucide {
+	width: 18px;
+	height: 18px;
+}
+
+.theme-toggle[data-theme="dark"] [data-lucide],
+.theme-toggle[data-theme="dark"] .lucide {
+	color: var(--text);
+}

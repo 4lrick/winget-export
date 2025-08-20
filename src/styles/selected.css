@@ -1,0 +1,127 @@
+.selected {
+	position: sticky;
+	top: 12px;
+	background: var(--panel);
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	padding: 12px;
+	display: grid;
+	align-content: start;
+	gap: 8px;
+	transition:
+		background-color 0.3s ease,
+		border-color 0.3s ease;
+}
+.selected-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.selected-header .clear-selected {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 4px;
+	background: var(--panel-2);
+	color: var(--text);
+	border: 1px solid var(--border);
+	border-radius: 6px;
+}
+
+.selected-list {
+	list-style: none;
+	margin: 12px 0;
+	padding: 0;
+	max-height: 380px;
+	overflow: auto;
+	border: 1px dashed var(--border);
+	border-radius: 8px;
+	transition: border-color 0.3s ease;
+}
+
+.empty-selected {
+	padding: 24px 16px;
+	text-align: center;
+	color: var(--muted);
+	font-size: 14px;
+}
+
+.selected-item {
+	display: grid;
+	grid-template-columns: 32px 1fr auto;
+	gap: 8px;
+	padding: 8px 10px;
+	border-bottom: 1px dashed var(--border);
+	transition:
+		background-color 0.3s ease,
+		border-color 0.3s ease;
+}
+.selected-item .btn.danger {
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+.selected-item:last-child {
+	border-bottom: 0;
+}
+
+.drag-handle {
+	cursor: grab;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.selected-item.dragging {
+	opacity: 0.5;
+	z-index: 1000;
+	user-select: none;
+}
+.selected-item.drop-above {
+	border-top: 2px solid var(--brand);
+}
+.selected-item.drop-below {
+	border-bottom: 2px solid var(--brand);
+}
+.selected-item:hover {
+	background: var(--panel-2);
+}
+
+.export {
+	display: grid;
+	gap: 8px;
+}
+.export-actions {
+	display: grid;
+	grid-template-columns: 1fr 1fr auto;
+	gap: 8px;
+}
+
+.copy-clipboard {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.command {
+	background: var(--panel-2);
+	color: var(--text);
+	border: 1px solid var(--border);
+	padding: 10px;
+	border-radius: 8px;
+	margin: 0;
+	font-size: 12px;
+	transition:
+		background-color 0.3s ease,
+		color 0.3s ease,
+		border-color 0.3s ease;
+}
+
+@media (max-width: 480px) {
+	.command {
+		white-space: normal;
+	}
+}

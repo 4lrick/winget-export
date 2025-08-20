@@ -1,0 +1,6 @@
+# Node
+node_modules/
+.pnpm-debug.log*
+
+# Data cache
+data/winget-pkgs/

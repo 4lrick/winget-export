@@ -1,0 +1,88 @@
+.layout {
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	gap: 16px;
+	align-items: start;
+}
+
+.results {
+	background: var(--panel);
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	transition:
+		background-color 0.3s ease,
+		border-color 0.3s ease;
+}
+.results .empty {
+	color: var(--muted);
+	padding: 16px;
+	text-align: center;
+}
+
+.result-item {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 8px;
+	padding: 12px 14px;
+	border-bottom: 1px solid var(--border);
+	transition:
+		background-color 0.3s ease,
+		border-color 0.3s ease;
+}
+.result-item:last-child {
+	border-bottom: 0;
+}
+
+.result-item a,
+.selected-item a {
+	color: var(--text);
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+.result-item a:hover,
+.selected-item a:hover {
+	color: var(--brand);
+}
+
+.select-toggle {
+	width: 30px;
+	height: 30px;
+	padding: 0;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+.select-toggle.active {
+	background: var(--brand);
+	color: white;
+	border: 0px;
+}
+
+.meta {
+	color: var(--muted);
+	font-size: 12px;
+}
+.tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-top: 6px;
+}
+.tag {
+	font-size: 11px;
+	color: var(--muted);
+	background: var(--panel-2);
+	border: 1px solid var(--border);
+	padding: 2px 6px;
+	border-radius: 999px;
+	transition:
+		background-color 0.3s ease,
+		border-color 0.3s ease,
+		color 0.3s ease;
+}
+
+@media (max-width: 900px) {
+	.layout {
+		grid-template-columns: 1fr;
+	}
+}

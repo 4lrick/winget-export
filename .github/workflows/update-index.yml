@@ -1,0 +1,82 @@
+name: Update winget-export index
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '0 0 * * *'
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache winget-pkgs repository
+        uses: actions/cache@v4
+        with:
+          path: data/winget-pkgs
+          key: winget-pkgs-${{ github.run_number }}
+          restore-keys: |
+            winget-pkgs-
+
+      - name: Build data/index.json
+        run: |
+          if [ -f "data/index.json" ]; then
+            cp data/index.json data/index.json.old
+          fi
+
+          npm run build
+
+      - name: Analyze package changes
+        run: |
+          if [ -f "data/index.json.old" ]; then
+            export LC_ALL=C
+            jq -r '.items[] | [.PackageIdentifier, "\(.PackageIdentifier)|\(.Version)"] | @tsv' data/index.json.old | sort > old_data.txt
+            jq -r '.items[] | [.PackageIdentifier, "\(.PackageIdentifier)|\(.Version)"] | @tsv' data/index.json | sort > new_data.txt
+            
+            cut -f1 old_data.txt | sort > old_ids.txt
+            cut -f1 new_data.txt | sort > new_ids.txt
+            cut -f2 old_data.txt | sort > old_packages.txt
+            cut -f2 new_data.txt | sort > new_packages.txt
+            
+            NEW_PACKAGES=$(comm -13 old_ids.txt new_ids.txt)
+            REMOVED_PACKAGES=$(comm -23 old_ids.txt new_ids.txt)
+            if [ -n "$NEW_PACKAGES" ]; then
+              UPDATED_PACKAGES=$(comm -13 old_packages.txt new_packages.txt | grep -v "$(echo "$NEW_PACKAGES" | sed 's/^/^/' | sed 's/$/|/')" | cut -d'|' -f1)
+            else
+              UPDATED_PACKAGES=$(comm -13 old_packages.txt new_packages.txt | cut -d'|' -f1)
+            fi
+            
+            [ -n "$NEW_PACKAGES" ] && echo "Added:" && echo "$NEW_PACKAGES"
+            [ -n "$UPDATED_PACKAGES" ] && echo "Updated:" && echo "$UPDATED_PACKAGES"
+            [ -n "$REMOVED_PACKAGES" ] && echo "Removed:" && echo "$REMOVED_PACKAGES"
+            
+            rm -f old_data.txt new_data.txt old_ids.txt new_ids.txt old_packages.txt new_packages.txt data/index.json.old
+          fi
+
+      - name: Update README with timestamp
+        run: |
+          sed -i "s|<!-- LAST_UPDATE_START -->.*<!-- LAST_UPDATE_END -->|<!-- LAST_UPDATE_START -->Package latest update: $(date -u +'%B %d, %Y at %H:%M UTC')<!-- LAST_UPDATE_END -->|g" README.md
+
+      - name: Commit updated files if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/index.json README.md
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update index.json and timestamp"
+            git push
+          fi

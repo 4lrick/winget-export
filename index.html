@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Browse Windows Package Manager packages, select what you need, and export them as JSON, PowerShell script, or command line for quick installation with winget." />
+    <title>Winget Export - Browse and Export</title>
+    <link rel="icon" type="image/x-icon" href="Assets/favicon.ico" />
+    <script>
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+    <link rel="stylesheet" href="src/styles/base.css" />
+    <link rel="stylesheet" href="src/styles/icons.css" />
+    <link rel="stylesheet" href="src/styles/results.css" />
+    <link rel="stylesheet" href="src/styles/selected.css" />
+    <link rel="stylesheet" href="src/styles/search.css" />
+  </head>
+  <body>
+    <header class="container">
+      <div class="header-content">
+        <h1>Winget Export</h1>
+        <p class="subtitle">Browse Windows Package Manager packages, select what you need, and export them for quick installation.</p>
+        <p class="last-updated">
+          <a href="https://github.com/4lrick/winget-export/actions/workflows/update-index.yml" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">
+            Package list updated: <span id="lastUpdated" aria-live="polite">loading...</span>
+          </a>
+        </p>
+      </div>
+      <button class="theme-toggle" data-theme="dark" aria-label="Switch to light theme" title="Switch to light theme">
+        <i data-lucide="sun"></i>
+      </button>
+    </header>
+
+    <main class="container">
+      <section class="search">
+        <label class="visually-hidden" for="searchInput">Search packages</label>
+        <input id="searchInput" class="search-input" type="search" placeholder="Search for apps (e.g., PowerToys, Firefox, Git)…" autocomplete="off" />
+      </section>
+
+      <section class="layout">
+        <div class="results" id="results">
+          <div class="empty">Loading packages…</div>
+        </div>
+
+        <aside class="selected">
+          <div class="selected-header">
+            <h2>Selected (<span id="selectedCount" aria-live="polite">0</span>)</h2>
+            <button class="btn clear-selected" title="Clear all" aria-label="Clear all">
+              <i data-lucide="trash-2" class="icon-trash-clear"></i>
+            </button>
+          </div>
+          <ul id="selectedList" class="selected-list"></ul>
+
+          <div class="export">
+            <div id="status" class="status" style="display: none;" role="status" aria-live="polite" aria-atomic="true"></div>
+            <div class="export-actions">
+              <button id="exportJson" class="btn">Export JSON</button>
+              <button id="exportPs1" class="btn">Export PS1</button>
+              <button class="btn secondary copy-clipboard" title="Copy command to clipboard" aria-label="Copy command">
+                <i data-lucide="copy"></i>
+              </button>
+            </div>
+            <div class="hint">Download a JSON (for winget import) or a PowerShell script to install selected packages.</div>
+            <pre class="command" id="importCommand">winget import --import-file "winget-export-YYYY-MM-DDTHH_MM_SS_sss-00_00.json"</pre>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="src/app.js" type="module"></script>
+  </body>
+</html>
