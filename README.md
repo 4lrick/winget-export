@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <em><!-- LAST_UPDATE_START -->Package latest update: January 16, 2026 at 01:01 UTC<!-- LAST_UPDATE_END --></em>
+  <em><!-- LAST_UPDATE_START -->Package latest update: January 17, 2026 at 00:58 UTC<!-- LAST_UPDATE_END --></em>
 </p>
 
 <p align="center">
